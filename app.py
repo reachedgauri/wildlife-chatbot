@@ -244,4 +244,5 @@ if question:
                 st.session_state.messages.append({"role": "assistant", "content": answer})
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+                st.stop()
     st.rerun()

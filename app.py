@@ -112,7 +112,7 @@ def get_answer(question, state, history):
         messages.append({"role": h["role"], "content": h["content"]})
     messages.append({"role": "user", "content": question})
     response = client.chat.completions.create(
-        model="llama3-70b-8192",
+        model="llama-3.3-70b-versatile",
         messages=messages,
         temperature=0.1,
         max_tokens=1000,

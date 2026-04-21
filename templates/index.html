@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aranya — India's Wildlife Law Guide. Check if an animal case is legal or illegal, draft complaints, get state-wise contacts. Free, multilingual.">
+<title>Aranya — India's Wildlife Law Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+:root {
+  --bg: #050c06;
+  --bg2: #091510;
+  --bg3: #0d1e10;
+  --border: rgba(74,180,74,0.18);
+  --accent: #4db84d;
+  --accent2: #6fcf6f;
+  --text: #cde0c4;
+  --text2: #7aa876;
+  --text3: #3d6340;
+  --user-bg: #0f2a14;
+  --bot-bg: #091510;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+.sidebar { width: 280px; min-width: 280px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; overflow-y: auto; gap: 14px; }
+.brand { padding: 4px 8px 16px; border-bottom: 1px solid var(--border); }
+.brand-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 700; color: var(--accent2); line-height: 1; }
+.brand-deva { font-size: 13px; color: var(--text3); letter-spacing: 3px; margin-top: 2px; }
+.brand-sub { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; }
+.sidebar label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); display: block; margin-bottom: 6px; }
+select { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 9px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; appearance: none; }
+select:focus { outline: none; border-color: var(--accent); }
+.quick-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); }
+.quick-btn { display: block; width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); padding: 9px 12px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; text-align: left; transition: all 0.15s; margin-bottom: 6px; }
+.quick-btn:hover { background: rgba(74,180,74,0.1); border-color: var(--accent); color: var(--accent2); }
+.sidebar-footer { font-size: 11px; color: var(--text3); line-height: 1.7; padding-top: 12px; border-top: 1px solid var(--border); margin-top: auto; }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.hero { background: linear-gradient(160deg, #0b2a10 0%, #0f3516 50%, #091a0c 100%); border-bottom: 1px solid var(--border); padding: 24px 36px 20px; flex-shrink: 0; }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 700; color: var(--accent2); line-height: 1; display: inline; }
+.hero-tagline { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin: 4px 0 8px; }
+.hero-desc { font-size: 13px; color: var(--text2); line-height: 1.65; max-width: 600px; }
+.hero-stats { display: flex; gap: 24px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(74,180,74,0.1); flex-wrap: wrap; }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--accent); display: block; line-height: 1; }
+.stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+.chat-area { flex: 1; overflow-y: auto; padding: 20px 36px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+.chat-area::-webkit-scrollbar { width: 4px; }
+.chat-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.msg { display: flex; gap: 12px; align-items: flex-start; animation: fadeUp 0.25s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.msg-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; border: 1px solid var(--border); background: var(--bg3); }
+.msg-bubble { max-width: 76%; border-radius: 4px 14px 14px 14px; padding: 13px 17px; font-size: 14px; line-height: 1.8; border: 1px solid var(--border); }
+.msg-bubble.bot { background: var(--bot-bg); color: var(--text); }
+.msg-bubble.user { background: var(--user-bg); border-color: rgba(74,180,74,0.28); border-radius: 14px 4px 14px 14px; }
+.msg-bubble strong, .msg-bubble b { color: #a0e0a0; }
+.msg-bubble code { background: rgba(74,180,74,0.12); color: var(--accent2); padding: 2px 6px; border-radius: 4px; font-size: 12.5px; }
+.msg-bubble h3 { color: var(--accent2); margin: 8px 0 4px; font-size: 15px; }
+.msg-bubble p { margin: 5px 0; }
+.msg-bubble ul, .msg-bubble ol { padding-left: 18px; margin: 5px 0; }
+.msg-bubble li { margin: 3px 0; }
+.msg-bubble hr { border-color: var(--border); margin: 8px 0; }
+.msg.user { flex-direction: row-reverse; }
+
+.typing { display: flex; gap: 5px; padding: 6px 0; align-items: center; }
+.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: bounce 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,80%,100% { transform: translateY(0); opacity: 0.4; } 40% { transform: translateY(-7px); opacity: 1; } }
+
+.input-bar { padding: 12px 36px 18px; border-top: 1px solid var(--border); background: var(--bg2); flex-shrink: 0; }
+.input-actions { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.dl-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text3); font-size: 11px; padding: 4px 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.dl-btn:hover { color: var(--accent2); border-color: var(--accent); }
+.input-wrap { display: flex; gap: 10px; align-items: flex-end; background: var(--bg3); border: 1.5px solid var(--border); border-radius: 13px; padding: 10px 13px; transition: border-color 0.2s; }
+.input-wrap:focus-within { border-color: var(--accent); }
+#questionInput { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; resize: none; max-height: 100px; line-height: 1.5; }
+#questionInput::placeholder { color: var(--text3); }
+.send-btn { background: var(--accent); border: none; border-radius: 8px; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; color: #fff; font-size: 15px; }
+.send-btn:hover { background: var(--accent2); transform: scale(1.05); }
+.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.input-hint { font-size: 11px; color: var(--text3); text-align: center; margin-top: 7px; }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .hero { padding: 16px 18px; }
+  .hero-title { font-size: 30px; }
+  .chat-area { padding: 14px 16px; }
+  .input-bar { padding: 10px 16px 14px; }
+  .msg-bubble { max-width: 90%; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand">
+    <div class="brand-name">🌿 Aranya</div>
+    <div class="brand-deva">अरण्य</div>
+    <div class="brand-sub">India's Wildlife Law Guide</div>
+  </div>
+  <div>
+    <label>📍 Your State / UT</label>
+    <select id="stateSelect">
+      {% for s in states %}
+      <option value="{{ s }}">{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>🌐 Language</label>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="hi">हिंदी (Hindi)</option>
+      <option value="ta">தமிழ் (Tamil)</option>
+      <option value="te">తెలుగు (Telugu)</option>
+      <option value="kn">ಕನ್ನಡ (Kannada)</option>
+      <option value="ml">മലയാളം (Malayalam)</option>
+      <option value="mr">मराठी (Marathi)</option>
+      <option value="bn">বাংলা (Bengali)</option>
+      <option value="gu">ગુજરાતી (Gujarati)</option>
+      <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+    </select>
+  </div>
+  <div class="quick-title">Quick Actions</div>
+  <div>
+    <button class="quick-btn" onclick="quickAsk('Can I keep a parrot at home?')">🦜 Can I keep a parrot?</button>
+    <button class="quick-btn" onclick="quickAsk('Is trading peacock feathers legal?')">🦚 Peacock feather trade?</button>
+    <button class="quick-btn" onclick="quickAsk('Is snake charming legal in India?')">🐍 Snake charming legal?</button>
+    <button class="quick-btn" onclick="quickAsk('Is selling turtle eggs legal?')">🐢 Selling turtle eggs?</button>
+    <button class="quick-btn" onclick="quickAsk('Can I privately own an elephant?')">🐘 Private elephant?</button>
+    <button class="quick-btn" onclick="quickAsk('Is keeping an owl as a pet legal?')">🦉 Keeping an owl?</button>
+    <button class="quick-btn" onclick="quickAsk('Help me draft a formal complaint to wildlife authorities about illegal animal trading I witnessed')">📝 Draft a complaint</button>
+    <button class="quick-btn" onclick="quickAsk('SHOW_CONTACTS')">📞 Show contacts</button>
+  </div>
+  <div class="sidebar-footer">
+    Based on Wildlife Protection Act 1972, CITES, and state-specific rules.<br><br>
+    ⚠️ Not a substitute for legal counsel.
+  </div>
+</div>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-title">Aranya</div>
+    <div class="hero-tagline">✦ Protect · Report · Know ✦</div>
+    <div class="hero-desc">India loses thousands of animals to illegal trade and poaching every year. Aranya helps you instantly check if an animal case is <strong style="color:#a0e0a0">legal or illegal</strong>, draft official complaints, and reach the right authorities — in your language, for your state.</div>
+    <div class="hero-stats">
+      <div><span class="stat-num">36</span><span class="stat-lbl">States & UTs</span></div>
+      <div><span class="stat-num">12</span><span class="stat-lbl">Languages</span></div>
+      <div><span class="stat-num">500+</span><span class="stat-lbl">Species</span></div>
+      <div><span class="stat-num">Free</span><span class="stat-lbl">Always</span></div>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    <div class="msg bot">
+      <div class="msg-avatar">🌿</div>
+      <div class="msg-bubble bot">
+        <strong>Namaste! 🙏</strong> I'm Aranya — your guide to India's wildlife laws.<br><br>
+        Ask me anything:<br>
+        🔍 <em>"Is keeping a parrot legal in Maharashtra?"</em><br>
+        ⚖️ <em>"What's the penalty for selling peacock feathers?"</em><br>
+        📝 <em>"Draft a complaint about illegal wildlife trade"</em><br>
+        📞 <em>"Who do I call to report illegal trade in Kerala?"</em><br><br>
+        Select your <strong>state</strong> and <strong>language</strong> in the sidebar.
+      </div>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-actions">
+      <button class="dl-btn" onclick="downloadChat()">⬇ Download Chat</button>
+    </div>
+    <div class="input-wrap">
+      <textarea id="questionInput" rows="1" placeholder="Ask about any animal, bird, or wildlife case in India..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+    <div class="input-hint">Enter to send · Shift+Enter for new line</div>
+  </div>
+</div>
+
+<script>
+let history = [];
+let isLoading = false;
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function quickAsk(q) {
+  document.getElementById('questionInput').value = q;
+  sendMessage();
+}
+
+function scrollToBottom() {
+  const area = document.getElementById('chatArea');
+  setTimeout(() => area.scrollTop = area.scrollHeight, 50);
+}
+
+function addMessage(role, content) {
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'bot' ? '🌿' : '👤';
+  const bubble = document.createElement('div');
+  bubble.className = `msg-bubble ${role}`;
+  bubble.innerHTML = marked.parse(content);
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  area.appendChild(div);
+  scrollToBottom();
+}
+
+function addTyping() {
+  const area = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typingMsg';
+  div.innerHTML = `<div class="msg-avatar">🌿</div><div class="msg-bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  area.appendChild(div);
+  scrollToBottom();
+}
+
+function removeTyping() {
+  const el = document.getElementById('typingMsg');
+  if (el) el.remove();
+}
+
+async function translateText(text, targetLang) {
+  if (targetLang === 'en') return text;
+  try {
+    const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+    const data = await res.json();
+    return data[0].map(x => x[0]).join('');
+  } catch { return text; }
+}
+
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('questionInput');
+  const question = input.value.trim();
+  if (!question) return;
+  const state = document.getElementById('stateSelect').value;
+  const lang = document.getElementById('langSelect').value;
+  input.value = ''; input.style.height = 'auto';
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  addMessage('user', question);
+  addTyping();
+  let questionEn = question;
+  if (lang !== 'en' && question !== 'SHOW_CONTACTS') {
+    questionEn = await translateText(question, 'en');
+  }
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: questionEn, state, history })
+    });
+    const data = await res.json();
+    removeTyping();
+    if (data.error) {
+      addMessage('bot', `⚠️ Error: ${data.error}`);
+    } else {
+      let answer = data.answer;
+      if (lang !== 'en') answer = await translateText(answer, lang);
+      addMessage('bot', answer);
+      history.push({ role: 'user', content: questionEn });
+      history.push({ role: 'assistant', content: data.answer });
+      if (history.length > 12) history = history.slice(-12);
+    }
+  } catch (err) {
+    removeTyping();
+    addMessage('bot', '⚠️ Connection error. Please try again.');
+  }
+  isLoading = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('questionInput').focus();
+}
+
+function downloadChat() {
+  const msgs = document.querySelectorAll('.msg');
+  let text = 'ARANYA — India\'s Wildlife Law Guide\nChat Transcript\n' + new Date().toLocaleString() + '\n\n';
+  msgs.forEach(m => {
+    const role = m.classList.contains('user') ? 'You' : 'Aranya';
+    const bubble = m.querySelector('.msg-bubble');
+    if (bubble) text += `${role}:\n${bubble.innerText}\n\n---\n\n`;
+  });
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aranya-chat.txt';
+  a.click();
+}
+</script>
+</body>
+</html>

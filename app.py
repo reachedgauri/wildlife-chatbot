@@ -1,9 +1,34 @@
 from flask import Flask, render_template, request, jsonify
 from groq import Groq
+import gspread
+from google.oauth2.service_account import Credentials
+from datetime import datetime
 import os
+import json
 
 app = Flask(__name__)
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+SHEET_ID = "1iKdomGNu6hlMf7g8pKzwHykuICK_KeZ0u_HZjdRvxfQ"
+
+def get_sheet():
+    try:
+        creds_json = os.environ.get("GOOGLE_CREDS")
+        creds_dict = json.loads(creds_json)
+        scopes = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+        client = gspread.authorize(creds)
+        return client.open_by_key(SHEET_ID).sheet1
+    except Exception as e:
+        print(f"Sheets error: {e}")
+        return None
+
+def save_to_sheet(state, language, user_msg, bot_msg):
+    try:
+        sheet = get_sheet()
+        if sheet:
+            sheet.append_row([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), state, language, user_msg, bot_msg])
+    except Exception as e:
+        print(f"Save error: {e}")
 
 STATE_CONTACTS = {
     "All India (Central Law)": {"Wildlife Crime Control Bureau (WCCB)": "011-23370217","Wildlife SOS Emergency": "9871963535","WWF India": "011-41504814","Project Tiger Directorate": "011-23073017","Ministry of Environment": "011-24695271"},
@@ -34,25 +59,31 @@ SYSTEM_PROMPT = """You are Aranya, India's Wildlife Law Guide. You help people u
 
 Your knowledge covers Wildlife Protection Act 1972, CITES, Prevention of Cruelty to Animals Act 1960, Forest Rights Act 2006, and all state-specific wildlife rules.
 
-ALWAYS respond using this exact markdown format with clear sections:
+ALWAYS respond using this exact format. Each section MUST have a blank line after it:
 
-🦚 **Animal/Bird:** [common name + scientific name]
+🦚 **Animal/Bird:** [common name and scientific name]
 
 ⚖️ **Legal Status:** [ILLEGAL / LEGAL / CONDITIONAL / NEEDS PERMIT]
 
-📋 **Applicable Law:** [WPA Schedule + section number]
+📋 **Applicable Law:** [WPA Schedule number and section. Explain what this schedule means in 1-2 sentences.]
 
-🗺️ **State Rule:** [specific state rule or "Same as central law"]
+🗺️ **State Rule:** [Specific rule for the user's state. If same as central law, explain the central law clearly in 2-3 sentences.]
 
-⚠️ **Exceptions:** [specific exceptions or "None for general public"]
+⚠️ **Exceptions:** [List any exceptions with explanation. If none, explain why there are no exceptions for general public in 2 sentences.]
 
-🔒 **Penalty:** [years imprisonment + fine in rupees]
+🔒 **Penalty:** [Exact imprisonment term and fine amount. Mention if repeat offence has higher penalty.]
 
-💡 **What To Do:** [3-4 practical steps]
+💡 **What To Do:**
+1. [First step]
+2. [Second step]
+3. [Third step]
+4. [Fourth step]
 
-📞 **Contact:** [authority name and number]
+📞 **Contact:** [Authority name and phone number.]
 
-Be accurate, compassionate, and clear. Never encourage illegal activity."""
+---
+
+Give thorough, well-explained answers. Write 2-3 sentences for each section. Always use blank lines between sections. Be accurate, compassionate and clear. Never encourage illegal activity."""
 
 @app.route("/")
 def index():
@@ -65,6 +96,7 @@ def chat():
     data = request.json
     question = data.get("question", "")
     state = data.get("state", "All India (Central Law)")
+    language = data.get("language", "English")
     history = data.get("history", [])
 
     if question == "SHOW_CONTACTS":
@@ -89,9 +121,10 @@ def chat():
             model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.1,
-            max_tokens=1000,
+            max_tokens=1500,
         )
         answer = response.choices[0].message.content
+        save_to_sheet(state, language, question, answer)
         return jsonify({"answer": answer})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

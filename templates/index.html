@@ -114,7 +114,7 @@ select:focus { outline: none; border-color: var(--accent); }
   </div>
   <div>
     <label>🌐 Language</label>
-    <select id="langSelect">
+    <select id="langSelect" onchange="clearChat()">
       <option value="en">English</option>
       <option value="hi">हिंदी (Hindi)</option>
       <option value="ta">தமிழ் (Tamil)</option>
@@ -174,6 +174,7 @@ select:focus { outline: none; border-color: var(--accent); }
 
   <div class="input-bar">
     <div class="input-actions">
+      <button class="dl-btn" onclick="clearChat()" style="margin-right:8px;">🔄 New Chat</button>
       <button class="dl-btn" onclick="downloadChat()">⬇ Download Chat</button>
     </div>
     <div class="input-wrap">
@@ -246,6 +247,13 @@ async function translateText(text, targetLang) {
   } catch { return text; }
 }
 
+function clearChat() {
+  history = [];
+  const area = document.getElementById('chatArea');
+  area.innerHTML = '';
+  addMessage('bot', '**Namaste! 🙏** Starting a fresh chat! Ask me anything about India\'s wildlife laws.\n\n🔍 *"Is keeping a parrot legal in Maharashtra?"*\n\n⚖️ *"What\'s the penalty for selling peacock feathers?"*');
+}
+
 async function sendMessage() {
   if (isLoading) return;
   const input = document.getElementById('questionInput');
@@ -253,6 +261,7 @@ async function sendMessage() {
   if (!question) return;
   const state = document.getElementById('stateSelect').value;
   const lang = document.getElementById('langSelect').value;
+  const langNames = {en:"English",hi:"Hindi",ta:"Tamil",te:"Telugu",kn:"Kannada",ml:"Malayalam",mr:"Marathi",bn:"Bengali",gu:"Gujarati",pa:"Punjabi"};
   input.value = ''; input.style.height = 'auto';
   isLoading = true;
   document.getElementById('sendBtn').disabled = true;
@@ -266,7 +275,7 @@ async function sendMessage() {
     const res = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: questionEn, state, history })
+      body: JSON.stringify({ question: questionEn, state, language: langNames[lang] || 'English', history })
     });
     const data = await res.json();
     removeTyping();

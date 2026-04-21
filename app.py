@@ -104,42 +104,167 @@ st.set_page_config(page_title="Aranya — India's Wildlife Law Guide", page_icon
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500&display=swap');
-html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; background-color: #050d06; color: #dde8d0; }
-.stApp { background: #050d06; }
-.main { background: #050d06; }
-div[data-testid="stSidebarContent"] { background: linear-gradient(180deg, #071209 0%, #050d06 100%) !important; border-right: 1px solid rgba(74,163,74,0.2); }
-.hero { background: linear-gradient(135deg, #071a09 0%, #0a2410 50%, #071209 100%); border: 1px solid rgba(74,163,74,0.25); border-radius: 20px; padding: 36px 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(74,163,74,0.08) 0%, transparent 70%); pointer-events: none; }
-.hero-name { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: #5dba5d; letter-spacing: -0.02em; line-height: 1; margin: 0 0 4px 0; }
-.hero-devanagari { font-size: 18px; color: rgba(93,186,93,0.6); margin: 0 0 12px 0; letter-spacing: 0.05em; }
-.hero-tagline { font-size: 13px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: #4ade80; margin: 0 0 20px 0; }
-.hero-desc { font-size: 15px; color: #8fad8a; line-height: 1.7; max-width: 580px; margin: 0; }
-.hero-stats { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
-.stat { text-align: center; }
-.stat-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: #4ade80; display: block; }
-.stat-label { font-size: 11px; color: #5a7a55; text-transform: uppercase; letter-spacing: 0.1em; }
-.stChatMessage { background: transparent !important; }
-[data-testid="stChatMessageContent"] { background: rgba(7,24,9,0.8) !important; border: 1px solid rgba(74,163,74,0.2) !important; border-radius: 14px !important; padding: 16px 20px !important; font-size: 14px !important; line-height: 1.8 !important; }
-.stButton > button { background: rgba(74,163,74,0.1) !important; color: #7dd87d !important; border: 1px solid rgba(74,163,74,0.3) !important; border-radius: 8px !important; font-size: 13px !important; }
-.stButton > button:hover { background: rgba(74,163,74,0.2) !important; }
-.stSelectbox > div > div { background: rgba(7,24,9,0.8) !important; border: 1px solid rgba(74,163,74,0.3) !important; color: #dde8d0 !important; border-radius: 8px !important; }
-.stChatInput > div { background: rgba(7,24,9,0.9) !important; border: 1px solid rgba(74,163,74,0.35) !important; border-radius: 12px !important; }
-.stChatInput textarea { color: #dde8d0 !important; }
-h1, h2, h3 { color: #5dba5d !important; font-family: 'Playfair Display', serif !important; }
-strong { color: #a3d4a3 !important; }
-code { background: rgba(74,163,74,0.15) !important; color: #7dd87d !important; border-radius: 4px !important; padding: 2px 6px !important; }
-hr { border-color: rgba(74,163,74,0.15) !important; }
+
+* { font-family: 'DM Sans', sans-serif !important; }
+
+/* Force dark theme */
+html, body, .stApp, .main, [class*="css"] {
+    background-color: #060e07 !important;
+    color: #d4e8c2 !important;
+}
+
+section[data-testid="stSidebar"] > div {
+    background: #071209 !important;
+    border-right: 1px solid #1a3d1e !important;
+}
+
+/* Hero */
+.aranya-hero {
+    background: linear-gradient(135deg, #0b2a10 0%, #0f3a16 60%, #091f0d 100%);
+    border: 1px solid #2d6e35;
+    border-radius: 16px;
+    padding: 40px 44px;
+    margin-bottom: 24px;
+}
+.aranya-title {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-size: 52px !important;
+    font-weight: 900 !important;
+    color: #6fcf6f !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+.aranya-deva {
+    font-size: 16px;
+    color: #4a9450;
+    margin: 4px 0 10px 2px;
+    letter-spacing: 2px;
+}
+.aranya-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #4ade80;
+    margin-bottom: 18px;
+}
+.aranya-desc {
+    font-size: 15px;
+    color: #8fbd8a;
+    line-height: 1.75;
+    max-width: 600px;
+    margin-bottom: 28px;
+}
+.aranya-stats {
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+    border-top: 1px solid #1e4d24;
+    padding-top: 20px;
+}
+.aranya-stat-num {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 28px;
+    font-weight: 700;
+    color: #4ade80;
+    display: block;
+    line-height: 1;
+}
+.aranya-stat-label {
+    font-size: 10px;
+    color: #4a7a4e;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Chat bubbles */
+.stChatMessage {
+    background: transparent !important;
+    padding: 4px 0 !important;
+}
+[data-testid="stChatMessageContent"] {
+    background: #0e2412 !important;
+    border: 1px solid #2a5530 !important;
+    border-radius: 12px !important;
+    padding: 18px 22px !important;
+    color: #d4e8c2 !important;
+    font-size: 14.5px !important;
+    line-height: 1.85 !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* User message different color */
+[data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) [data-testid="stChatMessageContent"] {
+    background: #132b17 !important;
+    border-color: #3a7040 !important;
+}
+
+/* Input */
+[data-testid="stChatInput"] {
+    background: #0e2412 !important;
+    border: 1.5px solid #2d6e35 !important;
+    border-radius: 12px !important;
+    padding: 4px 8px !important;
+}
+[data-testid="stChatInput"] textarea {
+    background: transparent !important;
+    color: #d4e8c2 !important;
+    font-size: 14px !important;
+}
+
+/* Buttons */
+.stButton > button {
+    background: #0e2412 !important;
+    color: #6fcf6f !important;
+    border: 1px solid #2d6e35 !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    transition: all 0.15s ease !important;
+    text-align: left !important;
+}
+.stButton > button:hover {
+    background: #163620 !important;
+    border-color: #4ade80 !important;
+    color: #a3f0a3 !important;
+}
+
+/* Selects */
+[data-baseweb="select"] > div {
+    background: #0e2412 !important;
+    border: 1px solid #2d6e35 !important;
+    border-radius: 8px !important;
+    color: #d4e8c2 !important;
+}
+
+/* Divider */
+hr { border-color: #1a3d1e !important; margin: 12px 0 !important; }
+
+/* Strong / bold in responses */
+strong, b { color: #a3f0a3 !important; }
+code { background: rgba(74,222,128,0.12) !important; color: #6fcf6f !important; border-radius: 4px !important; padding: 2px 7px !important; font-size: 13px !important; }
+
+/* Caption */
+.stCaption { color: #4a7a4e !important; font-size: 12px !important; }
 </style>
 """, unsafe_allow_html=True)
 
+# Sidebar
 with st.sidebar:
-    st.markdown('<div style="font-family:serif;font-size:22px;font-weight:700;color:#5dba5d;">🌿 Aranya</div><div style="font-size:11px;color:#4a6b45;text-transform:uppercase;letter-spacing:0.12em;">India\'s Wildlife Law Guide</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="padding: 8px 0 16px 0;">
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:800;color:#6fcf6f;">🌿 Aranya</div>
+        <div style="font-size:10px;color:#3d6b42;text-transform:uppercase;letter-spacing:2px;margin-top:3px;">India's Wildlife Law Guide</div>
+    </div>
+    """, unsafe_allow_html=True)
     st.divider()
     state = st.selectbox("📍 Your State / UT", INDIAN_STATES)
     lang_label = st.selectbox("🌐 Language", list(LANGUAGES.keys()))
     lang_code = LANGUAGES[lang_label]
     st.divider()
-    st.markdown("**Quick Actions:**")
+    st.markdown("<div style='font-size:12px;color:#4a7a4e;font-weight:600;margin-bottom:8px;'>Quick Actions</div>", unsafe_allow_html=True)
     quick = {
         "🦜 Can I keep a parrot?": "Can I keep a parrot at home?",
         "🦚 Peacock feather trade?": "Is trading peacock feathers legal?",
@@ -154,32 +279,47 @@ with st.sidebar:
         if st.button(label, use_container_width=True):
             st.session_state["prefill"] = q
     st.divider()
-    st.markdown('<div style="font-size:11px;color:#3a5a36;line-height:1.7;">Based on Wildlife Protection Act 1972, CITES, and state-specific rules.<br><br>⚠️ Not a substitute for legal counsel.</div>', unsafe_allow_html=True)
+    st.markdown("<div style='font-size:11px;color:#2d5530;line-height:1.7;'>Based on Wildlife Protection Act 1972, CITES, and state-specific rules.<br><br>⚠️ Not a substitute for legal counsel.</div>", unsafe_allow_html=True)
 
-st.markdown("""
-<div class="hero">
-    <div class="hero-name">Aranya</div>
-    <div class="hero-devanagari">अरण्य</div>
-    <div class="hero-tagline">Protect. Report. Know.</div>
-    <div class="hero-desc">India loses thousands of animals to illegal trade, poaching, and ignorance of the law every year. Aranya helps you instantly check if an animal case is <strong>legal or illegal</strong>, understand your rights, draft official complaints, and connect with the right authorities — in your language, for your state.</div>
-    <div class="hero-stats">
-        <div class="stat"><span class="stat-num">36</span><span class="stat-label">States & UTs</span></div>
-        <div class="stat"><span class="stat-num">12</span><span class="stat-label">Languages</span></div>
-        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Protected Species</span></div>
-        <div class="stat"><span class="stat-num">Free</span><span class="stat-label">Always</span></div>
+# Hero
+st.markdown(f"""
+<div class="aranya-hero">
+    <div class="aranya-title">Aranya</div>
+    <div class="aranya-deva">अरण्य</div>
+    <div class="aranya-tag">✦ Protect &nbsp;·&nbsp; Report &nbsp;·&nbsp; Know ✦</div>
+    <div class="aranya-desc">
+        India loses thousands of animals to illegal trade, poaching, and ignorance of the law every year.
+        <strong>Aranya</strong> helps you instantly check if an animal case is legal or illegal,
+        understand your rights, draft official complaints, and reach the right authorities —
+        in your language, for your state.
+    </div>
+    <div class="aranya-stats">
+        <div><span class="aranya-stat-num">36</span><span class="aranya-stat-label">States & UTs</span></div>
+        <div><span class="aranya-stat-num">12</span><span class="aranya-stat-label">Languages</span></div>
+        <div><span class="aranya-stat-num">500+</span><span class="aranya-stat-label">Species Covered</span></div>
+        <div><span class="aranya-stat-num">Free</span><span class="aranya-stat-label">Always</span></div>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-st.caption(f"📍 Region: **{state}** &nbsp;|&nbsp; 🌐 Language: **{lang_label}**")
+st.caption(f"📍 {state}  ·  🌐 {lang_label}")
 
+# Chat
 if "messages" not in st.session_state:
     st.session_state.messages = []
     st.session_state.history = []
 
 if not st.session_state.messages:
     with st.chat_message("assistant", avatar="🌿"):
-        st.markdown("""**Namaste! 🙏** I'm Aranya — your guide to India's wildlife laws.\n\nAsk me anything:\n- 🔍 **"Is keeping a parrot legal in Maharashtra?"**\n- ⚖️ **"What's the penalty for selling peacock feathers?"**\n- 📝 **"Draft a complaint about a pet shop selling wild birds"**\n- 📞 **"Who do I call to report illegal wildlife trade in Kerala?"**\n\nSelect your **state** and **language** in the sidebar for region-specific answers.""")
+        st.markdown("""**Namaste! 🙏** I'm Aranya — your guide to India's wildlife laws.
+
+Ask me anything:
+- 🔍 **"Is keeping a parrot legal in Maharashtra?"**
+- ⚖️ **"What's the penalty for selling peacock feathers?"**
+- 📝 **"Draft a complaint about a pet shop selling wild birds"**
+- 📞 **"Who do I call to report illegal wildlife trade in Kerala?"**
+
+Select your **state** and **language** in the sidebar for region-specific answers.""")
 
 for msg in st.session_state.messages:
     avatar = "👤" if msg["role"] == "user" else "🌿"
